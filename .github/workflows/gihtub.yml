@@ -23,8 +23,17 @@ jobs:
       - name: Run coverage
         run: go test ./... -race -coverprofile=coverage.txt -covermode=atomic
 
-      - name: Coveralls GitHub Action
+#      - name: Coveralls GitHub Action
+#        uses: coverallsapp/github-action@master
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          path-to-lcov: ${{ github.workspace }}/coverage/lcov.info
+      - name: Get path to lcov file
+        id: get_lcov_path
+        shell: bash
+        run: printf '::set-output name=lcov_path::%s\n' TestResults/*/coverage.info
+      - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ github.workspace }}/coverage/lcov.info
+          path-to-lcov: ${{ steps.get_lcov_path.outputs.lcov_path }}
