@@ -1,14 +1,41 @@
-name: Go package
+#name: Go package
+#
+#on: [push, pull_request]
+#
+#jobs:
+#  build:
+#
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up Go
+#        uses: actions/setup-go@v3
+#        with:
+#          go-version: 1.18
+#
+#      - name: Build
+#        run: go build -v ./...
+#
+#      - name: Test
+#        run: go test -v ./...
+#
+#      - name: Run coverage
+#        run: go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+#
+#      - name: Barecheck - Code Coverage
+#        uses: barecheck/code-coverage-action@v1.0.0
+name: Code Coverage
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  build:
-
+  base_branch_cov:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
+        with:
+          ref: ${{ github.base_ref }}
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
@@ -17,28 +44,44 @@ jobs:
       - name: Build
         run: go build -v ./...
 
-      - name: Test
+      - name: Run test coverage
         run: go test -v ./...
 
-      - name: Run coverage
-        run: go test ./... -coverprofile=./lcov.info
+      - name: Upload code coverage for ref branch
+        uses: actions/upload-artifact@v2
+        with:
+          name: ref-lcov.info
+          path: ./coverage/lcov.info
 
-      - name: Coveralls GitHub Action
-#        uses: coverallsapp/github-action@1.1.3
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          path-to-lcov: ./lcov.info
-        env:
-          TESTCOVERAGE_THRESHOLD: 60
-        run: |
-          echo "Quality Gate: checking test coverage is above threshold ..."
-          echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
-          totalCoverage=`go tool cover -func=temp.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
-          echo "Current test coverage : $totalCoverage %"
-          if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
-            echo "OK"
-          else
-            echo "Current test coverage is below threshold. Please add more unit tests or adjust threshold to a lower value."
-            echo "Failed"
-          fi
-        shell: bash
+  checks:
+    runs-on: ubuntu-latest
+    needs: base_branch_cov
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Download code coverage report from base branch
+        uses: actions/download-artifact@v2
+        with:
+          name: ref-lcov.info
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Run test coverage
+        run: go test -v ./...
+
+      #  Compares two code coverage files and generates report as a comment
+      - name: Generate Code Coverage report
+        id: code-coverage
+        uses: barecheck/code-coverage-action@v1
+        with:
+          barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+          lcov-file: "./coverage/lcov.info"
+          base-lcov-file: "./lcov.info"
+          minimum-ratio: 0 # Fails Github action once code coverage is decreasing
+          send-summary-comment: true
+          show-annotations: "warning" # Possible options warning|error
