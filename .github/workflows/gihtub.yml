@@ -47,6 +47,9 @@ jobs:
       - name: Run test coverage
         run: go test -v ./...
 
+      - name: Run coverage
+        run: go test ./... -race -coverprofile=ref-lcov.info -covermode=atomic
+
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v2
         with:
@@ -73,6 +76,9 @@ jobs:
 
       - name: Run test coverage
         run: go test -v ./...
+
+#      - name: Run coverage
+#        run: go test ./... -race -coverprofile=lcov.info -covermode=atomic
 
       #  Compares two code coverage files and generates report as a comment
       - name: Generate Code Coverage report
