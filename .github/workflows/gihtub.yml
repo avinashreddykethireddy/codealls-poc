@@ -48,13 +48,16 @@ jobs:
         run: go test -v ./...
 
       - name: Run coverage
-        run: go test ./... -race -coverprofile=./lcov.info -covermode=atomic
+        run: go test -race -covermode=atomic -coverprofile=coverage.out ./...
+
+      - name: Convert Coverage Profile to LCOV Format
+        run: lcov --capture --directory . --output-file coverage.info
 
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v2
         with:
-          name: ref-lcov.info
-          path: ./lcov.info
+          name: coverage.info
+          path: ./coverage.info
 
   checks:
     runs-on: ubuntu-latest
@@ -69,7 +72,7 @@ jobs:
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v2
         with:
-          name: ref-lcov.info
+          name: coverage.info
 
       - name: Build
         run: go build -v ./...
@@ -78,16 +81,18 @@ jobs:
         run: go test -v ./...
 
       - name: Run coverage
-        run: go test ./... -race -coverprofile=./new-lcov.info -covermode=atomic
+        run: go test -race -covermode=atomic -coverprofile=cover.out ./...
 
+      - name: Convert Coverage Profile to LCOV Format
+        run: lcov --capture --directory . --output-file cover.info
       #  Compares two code coverage files and generates report as a comment
       - name: Generate Code Coverage report
         id: code-coverage
         uses: barecheck/code-coverage-action@v1
         with:
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "./lcov.info"
-          base-lcov-file: "./new-lcov.info"
+          lcov-file: "./cover.info"
+          base-lcov-file: "./coverage.info"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
