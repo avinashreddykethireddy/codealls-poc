@@ -91,6 +91,16 @@ jobs:
 
       - name: Convert Coverage Profile to LCOV Format
         run: lcov --capture --directory . --output-file cover.info
+
+      - name: Check cover.info file
+        run: cat cover.info
+
+      - name: Upload code coverage for ref branch
+        uses: actions/upload-artifact@v2
+        with:
+          name: cover.info
+          path: ./cover.info
+
       #  Compares two code coverage files and generates report as a comment
       - name: Generate Code Coverage report
         id: code-coverage
