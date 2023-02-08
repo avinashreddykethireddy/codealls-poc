@@ -54,8 +54,8 @@ jobs:
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v2
         with:
-          name: coverage.info
-          path: ./coverage.info
+          name: coverage.lcov
+          path: ./coverage.lcov
 
   checks:
     runs-on: ubuntu-latest
@@ -67,13 +67,10 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Install LCOV
-        run: sudo apt-get update && sudo apt-get install lcov
-
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v2
         with:
-          name: coverage.info
+          name: coverage.lcov
 
       - name: Build
         run: go build -v ./...
@@ -102,8 +99,8 @@ jobs:
         uses: barecheck/code-coverage-action@v1
         with:
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "./cover.info"
-          base-lcov-file: "./coverage.info"
+          lcov-file: "./cover.lcov"
+          base-lcov-file: "./coverage.lcov"
           minimum-ratio: 0 # Fails Github action once code coverage is decreasing
           send-summary-comment: true
           show-annotations: "warning" # Possible options warning|error
