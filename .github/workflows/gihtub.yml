@@ -94,6 +94,7 @@ jobs:
 
       - name: Check cover.info file
         run: cat cover.info
+        shell: bash
 
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v2
