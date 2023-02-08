@@ -1,0 +1,87 @@
+#name: Go package
+#
+#on: [push, pull_request]
+#
+#jobs:
+#  build:
+#
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up Go
+#        uses: actions/setup-go@v3
+#        with:
+#          go-version: 1.18
+#
+#      - name: Build
+#        run: go build -v ./...
+#
+#      - name: Test
+#        run: go test -v ./...
+#
+#      - name: Run coverage
+#        run: go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+#
+#      - name: Barecheck - Code Coverage
+#        uses: barecheck/code-coverage-action@v1.0.0
+name: Code Coverage
+
+on: [pull_request]
+
+jobs:
+  base_branch_cov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.base_ref }}
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Run test coverage
+        run: go test -v ./...
+
+      - name: Upload code coverage for ref branch
+        uses: actions/upload-artifact@v2
+        with:
+          name: ref-lcov.info
+          path: ./coverage/lcov.info
+
+  checks:
+    runs-on: ubuntu-latest
+    needs: base_branch_cov
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Download code coverage report from base branch
+        uses: actions/download-artifact@v2
+        with:
+          name: ref-lcov.info
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Run test coverage
+        run: go test -v ./...
+
+      #  Compares two code coverage files and generates report as a comment
+      - name: Generate Code Coverage report
+        id: code-coverage
+        uses: barecheck/code-coverage-action@v1
+        with:
+          barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+          lcov-file: "./coverage/lcov.info"
+          base-lcov-file: "./lcov.info"
+          minimum-ratio: 0 # Fails Github action once code coverage is decreasing
+          send-summary-comment: true
+          show-annotations: "warning" # Possible options warning|error
