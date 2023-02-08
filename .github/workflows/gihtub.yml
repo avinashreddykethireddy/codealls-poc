@@ -49,7 +49,7 @@ jobs:
         run: go install github.com/jandelgado/gcov2lcov@latest
 
       - name: test coverage to lcov format
-        run: go test -coverprofile=coverage.out && gcov2lcov -infile=coverage.out -outfile=coverage.lcov
+        run: go test -coverprofile=coverage.out ./... && gcov2lcov -infile=coverage.out -outfile=coverage.lcov
 
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v2
@@ -88,7 +88,7 @@ jobs:
 #        run: go test -race -covermode=atomic -coverprofile=cover.out ./...
 
       - name: Run coverage
-        run: go test -coverprofile=coverage.out && gcov2lcov -infile=coverage.out -outfile=cover.lcov
+        run: go test -coverprofile=coverage.out ./... && gcov2lcov -infile=coverage.out -outfile=cover.lcov
 
 #      - name: Upload code coverage for ref branch
 #        uses: actions/upload-artifact@v2
