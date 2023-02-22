@@ -3,11 +3,12 @@ on:
   pull_request:
     types: [ labeled ]
     paths:
-      - 'adder/*'
+      - 'adder/**'
+      - 'go.mod'
 jobs:
   service:
     name: Adder Workflows
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Set up Go
