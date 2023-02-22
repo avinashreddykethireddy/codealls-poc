@@ -1,9 +1,14 @@
 name: Quality
-on: [push, pull_request]
+on:
+  pull_request:
+    paths:
+      - 'adder/**'
+      - 'go.mod'
 jobs:
-  test:
-    name: Test with Coverage
+  service:
+    name: Adder Workflows
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -16,14 +21,14 @@ jobs:
           go mod download
       - name: Run Unit tests
         run: |
-          go test -race -covermode atomic -coverprofile=covprofile ./...
+          go test -race -covermode atomic -coverprofile=covprofile ./adder/...
       - name: Install goveralls
         run: go install github.com/mattn/goveralls@latest
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: goveralls -coverprofile=covprofile -service=github
-#name: Code Coverage
+
 #
 #on: [pull_request]
 #
