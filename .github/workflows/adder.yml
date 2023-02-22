@@ -27,6 +27,7 @@ jobs:
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: adder
         run: goveralls -coverprofile=covprofile -service=github
 
 #
