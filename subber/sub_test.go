@@ -2,6 +2,15 @@ package subber
 
 import "testing"
 
+func TestAdder(t *testing.T) {
+	sum := Sub(2, 2)
+	expected := 0
+
+	if sum != expected {
+		t.Errorf("expected '%d' but got '%d'", expected, sum)
+	}
+}
+
 func TestCheckValues(t *testing.T) {
 	cases := []struct {
 		x        int
