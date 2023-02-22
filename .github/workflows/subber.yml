@@ -1,5 +1,9 @@
 name: Quality
 on:
+  push:
+    paths:
+      - 'subber/**'
+      - 'go.mod'
   pull_request:
     paths:
       - 'subber/**'
