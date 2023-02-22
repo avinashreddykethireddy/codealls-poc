@@ -23,7 +23,7 @@ jobs:
         run: |
           go test -race -covermode atomic -coverprofile=covprofile ./subber/...
       - name: Coveralls gihtub
-        uses: coverallsapp/github-action@v2.0.0
+        uses: coverallsapp/github-action@master
         with:
           path-to-lcov: covprofile
           flag-name: 'lcov'
