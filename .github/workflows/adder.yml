@@ -1,5 +1,6 @@
 name: Quality
 on:
+  push: null
   pull_request:
     paths:
       - 'adder/**'
