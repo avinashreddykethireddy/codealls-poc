@@ -1,7 +1,7 @@
 package subber
 
 func Sub(x, y int) int {
-	return x + y
+	return x - y
 }
 
 func CheckValues(x, y int) string {

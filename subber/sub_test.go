@@ -2,7 +2,7 @@ package subber
 
 import "testing"
 
-func TestAdder(t *testing.T) {
+func TestSub(t *testing.T) {
 	sum := Sub(2, 2)
 	expected := 0
 
