@@ -4,6 +4,9 @@ on:
     paths:
       - 'adder/**'
       - 'go.mod'
+  push:
+    branches:
+      - 'push-action/**'
 jobs:
   service:
     name: Adder Workflows

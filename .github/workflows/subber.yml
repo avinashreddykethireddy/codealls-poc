@@ -4,6 +4,9 @@ on:
     paths:
       - 'subber/**'
       - 'go.mod'
+  push:
+    branches:
+      - 'push-action/**'
 jobs:
   service:
     name: Subber Workflows
