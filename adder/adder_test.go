@@ -13,6 +13,15 @@ func TestAdder(t *testing.T) {
 	}
 }
 
+func TestAdderCheckToZero(t *testing.T) {
+	sum := AdderCheckToZero(2, 2)
+	expected := 1
+
+	if sum != expected {
+		t.Errorf("expected '%d' but got '%d'", expected, sum)
+	}
+}
+
 func TestCheckValues(t *testing.T) {
 	cases := []struct {
 		x        int
@@ -21,8 +30,6 @@ func TestCheckValues(t *testing.T) {
 	}{
 		{2, 5, "less"},
 		{2, 10, "more"},
-		//{2, -2, "zero"},
-		//{2, -7, "less"},
 	}
 	for _, c := range cases {
 		t.Run("testing", func(t *testing.T) {

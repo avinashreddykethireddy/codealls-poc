@@ -2,6 +2,15 @@ package subber
 
 import "testing"
 
+func TestSub(t *testing.T) {
+	sum := Sub(2, 2)
+	expected := 0
+
+	if sum != expected {
+		t.Errorf("expected '%d' but got '%d'", expected, sum)
+	}
+}
+
 func TestCheckValues(t *testing.T) {
 	cases := []struct {
 		x        int
@@ -9,6 +18,7 @@ func TestCheckValues(t *testing.T) {
 		expected string
 	}{
 		{2, 5, "less"},
+		{10, 7, "more"},
 	}
 	for _, c := range cases {
 		t.Run("testing", func(t *testing.T) {
