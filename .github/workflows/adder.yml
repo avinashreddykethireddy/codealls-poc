@@ -28,6 +28,7 @@ jobs:
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           flag-name: adder
+          config-file: .coveralls.yml
         run: goveralls -coverprofile=covprofile -service=github
 
 #
