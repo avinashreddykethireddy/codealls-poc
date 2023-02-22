@@ -1,5 +1,12 @@
 name: Quality
 on:
+<<<<<<< Updated upstream
+=======
+  push:
+    paths:
+      - 'adder/**'
+      - 'go.mod'
+>>>>>>> Stashed changes
   pull_request:
     paths:
       - 'adder/**'
@@ -27,8 +34,6 @@ jobs:
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: adder
-          config-file: .coveralls.yml
         run: goveralls -coverprofile=covprofile -service=github
 
 #
