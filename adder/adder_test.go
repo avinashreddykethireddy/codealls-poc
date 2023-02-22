@@ -30,7 +30,7 @@ func TestCheckValues(t *testing.T) {
 	}{
 		{2, 5, "less"},
 		{2, 10, "more"},
-		{2, -1, "zero"},
+		{2, -2, "zero"},
 	}
 	for _, c := range cases {
 		t.Run("testing", func(t *testing.T) {
