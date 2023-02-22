@@ -1,12 +1,9 @@
 name: Quality
 on:
-<<<<<<< Updated upstream
-=======
   push:
     paths:
       - 'adder/**'
       - 'go.mod'
->>>>>>> Stashed changes
   pull_request:
     paths:
       - 'adder/**'
