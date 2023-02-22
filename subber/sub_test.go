@@ -18,6 +18,7 @@ func TestCheckValues(t *testing.T) {
 		expected string
 	}{
 		{2, 5, "less"},
+		{10, 7, "more"},
 	}
 	for _, c := range cases {
 		t.Run("testing", func(t *testing.T) {
