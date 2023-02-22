@@ -1,7 +1,6 @@
 name: Quality
 on:
   pull_request:
-    types: [ labeled ]
     paths:
       - 'adder/**'
       - 'go.mod'
