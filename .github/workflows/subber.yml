@@ -22,11 +22,18 @@ jobs:
       - name: Run Unit tests
         run: |
           go test -race -covermode atomic -coverprofile=covprofile ./subber/...
-      - name: Install goveralls
-        run: go install github.com/mattn/goveralls@latest
-      - name: Send coverage
-        env:
-          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: adder
+      - name: Coveralls gihtub
+        uses: coverallsapp/github-action@v2.0.0
+        with:
+          path-to-lcov: covprofile
+          flag-name: 'lcov'
           config-file: .coveralls.yml
-        run: goveralls -coverprofile=covprofile -service=github
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Install goveralls
+#        run: go install github.com/mattn/goveralls@latest
+#      - name: Send coverage
+#        env:
+#          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          flag-name: adder
+#          config-file: .coveralls.yml
+#        run: goveralls -coverprofile=covprofile -service=github
